@@ -1,0 +1,3 @@
+This data folder is intended to hold compiled shelve files for reuse. Currently:
+
+- The editor list

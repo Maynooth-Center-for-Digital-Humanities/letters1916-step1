@@ -1,0 +1,35 @@
+---
+
+
+outputFolder: Output/                                   # The folder to contain the output files
+processingFolderPrefix: TEST                            # The prefix of the output folder to be created (will name folder in style: "PREFIX2016-03-31")
+inputFilePath: Spreadsheets/test_dump16022016.xlsx      # The Excel file from the Omeka data dump
+
+# Configuration for FILTERING letters to be processed (INCLUDES and EXCLUDES files)
+filter_configs:
+    inclusionFilePath: Spreadsheets/ProofingTranscriptionsAbstracts16022016.xlsx    # Path to spreadsheet of completed letters
+    inclusionCutoffDate: 15 February 2016                                           # The cutoff date (i.e. the date of the Omeka dump)
+    #inclusionDirectoryPath: Processed2016-02-16/xmlfiles                           # Path to a directory of files to INCLUDE if necessary
+    #exclusionDirectoryPath: "Letters 2015-12-08 0"                                 # Path to a directory of files to EXCLUDE if necessary
+    exclusionURL: "http://xl1916mono.mucampus.ie:5001/currentFiles"                 # URL to get files currently in LetEd and EXCLUDE them (to prevent overriding)
+
+    #inclusionListObject: arbitraryInclusionList                                    # Set an arbitrary list of files to INCLUDE, in the form: [1, 2, 3]
+    #exclusionListObject: arbitraryExclusionList                                    # Set an arbitrary list of files to EXCLUDE, in the form: [1, 2, 3]
+
+# Configuration for logging edits carried out in Omeka (uses same sheet as filter_configs typically)
+editLogger_configs:
+    editFilePath: Spreadsheets/ProofingTranscriptionsAbstracts16022016.xlsx
+
+# Configuration for building institution refs (uses the "Institution List" spreadsheet)
+buildInstitutionRefs_configs:
+    instListFile: Spreadsheets/institution_ID.xlsx
+    #instListSheet: MAIN    # Sheet by default
+    #instColumn: NAME     # Column is 'NAME' by default
+
+buildPlaceRefs_configs:
+    placeListFile: Spreadsheets/placeList_ID.xlsx
+
+buildNameRefs_configs:
+    nameListFile: Spreadsheets/person_ID.xlsx
+
+templateFile: Templates/newTemplate.xml

@@ -1,0 +1,416 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?oxygen RNGSchema="https://raw.githubusercontent.com/bleierr/Letters-1916-sample-files/master/plain%20corresp%20templates/template.rng" type="xml"?>
+<TEI xmlns="http://www.tei-c.org/ns/1.0">
+<teiHeader xml:id="L1916_{{Letter}}">
+    <fileDesc>
+            <titleStmt>
+                <title>{{Title|e}}</title>
+                {% if Creator and Creator != 'NULL' %}
+                <author>{{Creator|e}}</author>
+                {% else %}
+                <author>MISSING</author>
+                {% endif %}
+            </titleStmt>
+            <editionStmt>
+                <edition>
+                    The Letters of 1916
+                </edition>
+                <respStmt>
+                    <resp>General Editor</resp>
+                    <name xml:id="SS">Susan Schreibman</name>
+                </respStmt>
+                
+                {% for editor in Editors %}
+                <respStmt>
+                    <resp>Editor</resp>
+                    <name xml:id="{{editor[1]}}">{{ editor[0] }}</name>    
+                </respStmt>
+                {% endfor %}
+
+                {% for contributor in Contributor_List %}
+                <respStmt>
+                    <resp>Contributor</resp>
+                    <name xml:id="{{replace_contribs(contributor)}}">{{ contributor }}</name>
+                </respStmt>
+                {% endfor %}
+            </editionStmt>
+            <publicationStmt>
+                <publisher>
+                    <address>
+                        <name>An Foras Feasa</name>
+                        <orgName>Maynooth University</orgName>
+                        <placeName>
+                            <settlement>Maynooth</settlement>
+                            <region>Co. Kildare</region>
+                            <country>IRE</country>
+                        </placeName>
+                    </address>
+                </publisher>
+                <idno>L1916_{{Letter|e}}</idno>
+                <availability status="restricted">
+                    <!-- PENDING -->
+                    <p>All rights reserved. No part of this image may be reproduced, distributed, or
+        transmitted in any form or by any means, including photocopying, recording, or other
+        electronic or mechanical methods, without the prior written permission of the institutional
+        or private owner of the image and the Letters of 1916 project. For permission requests,
+        write to the Letters of 1916 at letters1916@gmail.com. </p>
+                    <!-- <p>Copyright  2015, Letters of 1916, Maynooth</p> -->
+                </availability>
+                <!-- date... insert dynamically with curent year -->
+                <date when="2016">2016</date>
+            </publicationStmt>
+            <notesStmt>
+                <note type="summary">
+                    {% if Description %}
+                        {% for desc_para in abstract_split(Description) %}
+                            {% if desc_para != '' %}
+                            <p>{{desc_para}}</p>
+                            {% endif %}
+                        {% endfor %}
+                    {% endif %}
+                </note>
+            </notesStmt>
+            <sourceDesc>
+                <msDesc>
+                    <msIdentifier>
+                        {% if 'Private' in Source %}
+
+                        <!-- Unnormalised source: {{Source|e}} -->
+                        <repository ref="#{{InstitutionRefs.ref}}">{{InstitutionRefs.name}}</repository>
+                        <collection type='private'>{{InstitutionRefs.name}}</collection>
+                        <idno/>
+                        {% else %}
+
+                        <!-- Unnormalised source: {{Source|e}} -->
+                        {% if InstitutionRefs.matchPercent < 100 %}
+                        <VERIFY><!-- REMOVE THIS IF INSTITUTION REF IS CORRECT --></VERIFY>
+                        {% endif %}
+                        <repository ref="#{{InstitutionRefs.ref}}">{{InstitutionRefs.name}}</repository>
+                        
+
+
+                        <!-- {% if DocCollection %}
+                                Original DCN: {{DocCollection|e}}
+                             {% endif %}
+                        -->
+                            {% if Document_Collection %}
+                                <collection type='public'>{{Document_Collection}}</collection>
+                            {% endif %}
+                            {% if Document_Number %}
+                        <idno>{{Document_Number|e}}</idno>
+                            {% else %}
+                        <idno>MISSING</idno>
+
+                           {% endif %}
+                       {% endif %}
+                    </msIdentifier>
+                </msDesc>
+           </sourceDesc>
+        </fileDesc>
+    <profileDesc>
+            <correspDesc xml:id="corresp1">
+
+                <!-- TO DO: add xml:id to correspDesc and standard -->
+
+                <correspAction type="received">
+                {% if Recipient != 'NULL' %}
+                    {% if RecipientRefs %}
+                        <!-- Unnormalised name: {{Recipient|e}} -->
+                        {% if RecipientRefs.matchPercent < 100 %}
+                        <VERIFY><!-- REMOVE THIS IF RECIPIENT IS CORRECT --></VERIFY>
+                        {% endif %}
+                        <persName ref="#{{RecipientRefs.ref}}">{{RecipientRefs.name}}</persName>
+                    {% else %}
+                        <persName ref="MISSING">{{Recipient|e}}</persName>
+                    {% endif %}
+                {% else %}
+                    <persName ref="MISSING">MISSING</persName>
+                {% endif %}
+                
+                {% if Recipient_location != 'NULL' %}
+                    {% if RecipientPlaceRefs %}
+                    <!-- Normalised Place Found: 
+                    {{ RecipientPlaceRefs.Place }} 
+                    {{ RecipientPlaceRefs.County }}
+                    {{ RecipientPlaceRefs.Country }}
+                    -->
+                    <VERIFY><!-- REMOVE THIS IF RECIPIENT LOCATION IS CORRECT --></VERIFY>
+                    <placeName  ref="#{{ RecipientPlaceRefs.UID }}">{{Recipient_location|e}}</placeName>
+                    {% else %}
+                    <placeName  ref="MISSING">{{Recipient_location|e}}</placeName>
+                    {% endif %}
+                {% endif %}
+                </correspAction>
+                 
+                <correspAction type="sent">
+                {% if Creator != 'NULL' %}
+                    {% if CreatorRefs %}
+                        <!-- Unnormalised name: {{Creator|e}} -->
+                        {% if CreatorRefs.matchPercent < 100 %}
+                        <VERIFY><!-- REMOVE THIS IF RECIPIENT IS CORRECT --></VERIFY>
+                        {% endif %}
+                        <persName ref="#{{CreatorRefs.ref}}">{{CreatorRefs.name}}</persName>
+                    {% else %}
+                        <persName ref="MISSING">{{Creator|e}}</persName>
+                    {% endif %}
+                {% else %}
+                    <persName ref="MISSING">MISSING</persName>
+                {% endif %}
+                
+                {% if Sender_location != 'NULL' %} 
+                    {% if SenderPlaceRefs %}
+                    <!-- Normalised Place Found: 
+                    {{ SenderPlaceRefs.Place }} 
+                    {{ SenderPlaceRefs.County }}
+                    {{ SenderPlaceRefs.Country }}
+                    -->
+                    <VERIFY><!-- REMOVE THIS IF RECIPIENT LOCATION IS CORRECT --></VERIFY>
+                    <placeName ref="#{{ SenderPlaceRefs.UID }}">{{Sender_location|e}}</placeName>
+                    {% else %}
+                    <placeName  ref="MISSING">{{Sender_location|e}}</placeName>
+                    {% endif %}
+                {% endif %}
+                    {% if DATE_created %}
+                    <date when="{{DATE_created}}">{{DATE_created_as_words}}</date>
+                    {% endif %}
+                </correspAction>
+            </correspDesc>
+            <textClass>
+
+                <keywords>
+                    <list>
+                    {% if Authors_gender and Authors_gender != 'NULL' %}
+                        <item n="gender">{{Authors_gender|e}}</item>
+                    {% endif %}  
+                    {% if Year_of_death_of_author and Year_of_death_of_author != 'NULL' %}
+                        <item n="death">{{Year_of_death_of_author|e}}</item>
+                    {% endif %}
+                    {% if Collection %}    
+                        <item n="tag">{{Collection|e}}</item>
+                    {% endif %}
+                    {% if Topic %}
+                        {% for topic in Topic.split(',') %}
+                            {% if topic.lower() != Collection.lower() %}
+                            <item n="tag">{{topic|e}}</item>
+                            {% endif %}
+                        {% endfor %}
+                    {% endif %}       
+                    </list>
+                </keywords>
+            </textClass>
+            <langUsage>
+                <language ident="en">{{Language|e}}</language>
+            </langUsage>
+     </profileDesc>
+    <encodingDesc>
+        <editorialDecl>
+            <p>
+                <!-- TO DO!!! also to be written by someone... -->
+            </p>
+        </editorialDecl>
+        <projectDesc>
+            <p><!--TO DO!!! TO BE WRITTEN BY SOMEONE...--></p>
+        </projectDesc>
+        <appInfo>
+
+            <!-- ADD OTHER APPLICATIONS HERE -->
+            <application xml:id="Omeka" ident="Omeka" version="1.5">
+                <desc>
+
+                </desc>
+            </application>
+
+            <application xml:id="PythonScript" ident="LetterProcessing" version="2">
+               <desc>Letter processing pipeline built by Richard Hadden &amp; Linda Spinazze,
+                  Maynooth University, 2015.
+                  <ref target="https://github.com/oculardexterity/Letters-Processing"/>
+               </desc>
+            </application>
+            <application xml:id="LetEd" ident="LetEd" version="1">
+               <desc>
+                  LetEd. letter editing tool built by Richard Hadden, Maynooth University, 2015.
+                  Built using the Python <ref target="http://flask.pocoo.org/">Flask Framework</ref>
+                  and the <ref target="https://github.com/umd-mith/angles">Angles web-based XML editor</ref>.
+               </desc>
+            </application>
+         </appInfo>
+    </encodingDesc>
+    <revisionDesc>
+        {% for revision in Edits %}
+            <change when="{{revision.datetime}}" who="#{{replace_contribs(revision.editor)}}">
+                {% if revision.editType == 'Clean Tags' %}
+                    Clean tags: Page {{ revision.page_cleaned }} cleaned of {{ revision.clean_count }} tag errors.
+                {% elif revision.editType == 'Revision in Omeka' %}
+                    Page {{ revision.Omeka_RevisionPageNo }} modified:
+                    {{ revision.Omeka_Translation }}
+                {% elif revision.editType == 'Old page duplicate removed' %}
+                    Importing to <ref target="#PythonScript"/>:
+                    Old revision of page {{ revision.Duplicate_pageNo }} removed (version from <date when="{{revision.Duplicate_pageTimestamp}}"/>)
+                {% elif revision.editType == 'New page instance created' %}
+                    Importing to <ref target="#PythonScript"/>:
+                    New instance of page {{revision.New_pageNo}} created using version from <date when="{{revision.New_pageTimestamp}}"/>
+                {% elif revision.editType == 'Additional page added to letter' %}
+                    Creating Letter object in <ref target="#PythonScript"/>:
+                    Page {{revision.Merged_pageNo}} added to letter (version from <date when="{{revision.Merged_pageTimestamp}}"/>)
+                {% elif revision.editType == 'New letter objected created' %}
+                    Creating Letter object in <ref target="#PythonScript"/>:
+                    New letter created with initial page {{ revision.Initial_pageNo }} (version from <date when="{{revision.Initial_pageTimestamp}}"/>)
+                {% elif revision.editType == 'OmekaProof' %}
+                    Proofing of transcription and XML tags begun in <ref target="#omeka">Omeka</ref>.
+                    (Further edits by <name ref="#{{replace_contribs(revision.editor)}}" /> should be
+                    considered as proofing by project editors.)
+
+                    [Abstract Proofed]
+                {% else %}
+                     {{revision.editType}}
+                {% endif %}
+
+                
+            </change>
+        {% endfor %}
+           
+    </revisionDesc>
+</teiHeader>
+    
+<facsimile> 
+    {% for key, page in sorted(Pages.items()) %}
+    <graphic xml:id="L1916_{{Letter}}_img_{{key}}" url="{{page.Archive_Filename}}"/> 
+    {% endfor %}
+</facsimile>               
+
+<text>
+    <group>
+       
+    {% if Type == 'PostcardAM' or Type == 'PostcardIM' %} 
+        <!-- Type is postcard -->
+        {% for key, page in [sorted(Pages.items())[0]] %} 
+        <pb n="{{ key }}" facs="#L1916_{{Letter}}_img_{{key}}"/>
+            
+        <text type="{{Type[:-2].lower()}}" decls="#corresp1">
+            <body>
+                {% if page.PageType == 'AddressSide'  %}
+                <div type="address">
+                    {{page.Translation}}
+                </div>
+                {% elif page.PageType == 'TextSide' %}
+                <div type="message">
+                    {{page.Translation}}
+                </div>
+                {% elif page.PageType == 'ImageCaptionSide'  %}
+                <div type="imageCaption">
+                    {{page.Translation}}
+                </div>
+                {% endif %}
+    {% endfor %}
+        {% for key, page in sorted(Pages.items())[1:] %}
+             <pb n="{{ key }}" facs="#L1916_{{Letter}}_img_{{key}}"/>
+                    {% if page.PageType == 'AddressSide'  %}
+                    <div type="address">
+                        {{page.Translation}}
+                    </div>
+                    {% elif page.PageType == 'TextSide' %}
+                    <div type="message">
+                        {{page.Translation}}
+                    </div>
+                    {% elif page.PageType == 'ImageCaptionSide'  %}
+                    <div type="imageCaption">
+                        {{page.Translation}}
+                    </div>
+                    {% endif %}
+        {% endfor %}
+            </body>
+        <text>
+
+    {% for key, page in sorted(Pages.items()) %}
+        {% if page.PageType != 'AddressSide' and page.PageType != 'TextSide' and page.PageType != 'ImageCaptionSide' and page.PageType != 'ImageSide' %}
+        <text type="additional" decls="#corresp1">
+            <body>
+                {{page.Translation}}
+            </body>
+        </text>
+        {% endif %}
+    {% endfor %}
+
+
+
+    {% elif Type == "Letter" %}
+    <!-- type is letter -->
+
+    {% for key, page in [sorted(Pages.items())[0]] %}
+        {% if page.PageType != 'EnvelopeType' %}
+        <pb n="{{ key }}" facs="#L1916_{{Letter}}_img_{{key}}"/>
+            <text type="letter" decls="#corresp1">
+                <body>
+                    {{page.Translation}}
+        {% endif %}
+    {% endfor %}
+
+    {% for key, page in sorted(Pages.items())[1:] %}
+        {% if page.PageType != 'EnvelopeType' %} 
+        <pb n="{{ key }}" facs="#L1916_{{Letter}}_img_{{key}}"/>
+        {% endif %}
+        {% if sorted(Pages.items())[0][1].PageType == 'EnvelopeType'  %}
+            <text type="letter" decls="#corresp1">
+                <body>
+        {% endif %}
+        {% if page.PageType != 'EnvelopeType' %}   
+            {{page.Translation}}
+        {% endif %}
+    {% endfor %}
+                </body>
+            </text>
+
+        {% for key, page in sorted(Pages.items()) %}
+            {% if page.PageType == 'EnvelopeType' %}
+            <pb n="{{ key }}" facs="#L1916_{{Letter}}_img_{{key}}"/>
+            <text type="envelope" decls="#corresp1">
+                <body> 
+                    <ab>
+                        {{page.Translation}}
+                    </ab>
+                </body>
+            </text>
+            {% endif %}
+        {% endfor %}
+
+    {% elif Type == 'PostcardCollection' %}
+        {% for key, page in sorted(Pages.items()) %}
+            {% if page.PageType != 'EnvelopeType' %}
+            <pb n="{{ key }}" facs="#L1916_{{Letter}}_img_{{key}}"/>
+            <text type="postcard" decls="#corresp1">
+                <body>
+                    <div type="imageCaption">
+                        <ab>
+                            {{page.Translation}}
+                        </ab>
+                    </div>
+                </body>
+            </text>
+            {% endif %}
+        {% endfor %}
+    {% else %}
+
+        {% for key, page in [sorted(Pages.items())[0]] %}
+            {% if page.PageType != 'EnvelopeType' %}
+            <pb n="{{ key }}" facs="#L1916_{{Letter}}_img_{{key}}"/>
+                <text type="{{Type.lower()}}" decls="#corresp1">
+                    <body>
+                        {{page.Translation}}
+            {% endif %}
+        {% endfor %}
+        {% for key, page in sorted(Pages.items())[1:] %}
+            <pb n="{{ key }}" facs="#L1916_{{Letter}}_img_{{key}}"/>
+            {{page.Translation}}
+        {% endfor %}
+            </body>
+        </text>
+    {% endif %}     
+
+    </group>
+</text>
+     
+
+</TEI>
+
+
+    
